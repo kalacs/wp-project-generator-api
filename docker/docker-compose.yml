@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     container_name: db
     restart: unless-stopped
-    env_file: .env
+    env_file: ../.env
     environment:
       - MYSQL_DATABASE=$MYSQL_DATABASE
     volumes: 
@@ -19,7 +19,7 @@ services:
     image: wordpress:5.1.1-fpm-alpine
     container_name: wordpress
     restart: unless-stopped
-    env_file: .env
+    env_file: ../.env
     environment:
       - WORDPRESS_DB_HOST=db:3306
       - WORDPRESS_DB_USER=$MYSQL_USER
@@ -39,6 +39,14 @@ services:
       - "80:80"
     volumes:
       - wordpress:/var/www/html
-      - ./docker/services/nginx/nginx-conf:/etc/nginx/conf.d
+      - ./services/web_server/nginx/nginx-conf:/etc/nginx/conf.d
     networks:
       - app-network
+
+volumes:
+  wordpress:
+  dbdata:
+
+networks:
+  app-network:
+    driver: bridge
