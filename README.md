@@ -19,9 +19,9 @@ docker run -it --rm \
 
 ## Features:
 
-[x] install basic WP from zero
-[ ] install WP with plugins
-[ ] create DEV workflow
-[ ] create deployment to staging environment
-[ ] create deployment to production environment
-[ ] simplify usage of this template, create predefined commands
+- [x] install basic WP from zero
+- [ ] install WP with plugins
+- [ ] create DEV workflow
+- [ ] create deployment to staging environment
+- [ ] create deployment to production environment
+- [ ] simplify usage of this template, create predefined commands
