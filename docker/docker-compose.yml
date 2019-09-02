@@ -13,6 +13,7 @@ services:
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       - app-network
+
   wordpress:
     depends_on: 
       - db
@@ -29,6 +30,7 @@ services:
       - wordpress:/var/www/html
     networks:
       - app-network
+
   webserver:
     depends_on:
       - wordpress
@@ -43,6 +45,17 @@ services:
     networks:
       - app-network
 
+  browserless:
+    image: browserless/chrome:latest
+    environment:
+      - DEBUG=browserless/chrome
+      - MAX_CONCURRENT_SESSIONS=10
+    shm_size: '2gb'
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+      
 volumes:
   wordpress:
   dbdata:
