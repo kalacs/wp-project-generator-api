@@ -1,21 +1,4 @@
-# Wordpress project template
-
-## Scenarios
-
-### Create new WP
-
-* Copy `.example.env` to `.env` and set variables
-* Start docker stack: `docker-compose -p wordpress -f docker/docker-compose.yml up -d`
-* Check `http://0.0.0.0` in browser
-* `cd docker/services/crawler/browserless && npm i && node test.js`
-* Run this command in another terminal: `curl http://localhost:8080/image > wp_install_screen.jpg` and check the downloaded image
-* In order to fix url issue run this:
-```
-docker run -it --rm \                                        
-    --volumes-from wordpress \
-    --network wordpress_app-network \
-    wordpress:cli search-replace 'webserver' '0.0.0.0' --skip-columns=guid
-```
+# Wordpress project configurator
 
 ## Features:
 
@@ -25,3 +8,20 @@ docker run -it --rm \
 - [ ] create deployment to staging environment
 - [ ] create deployment to production environment
 - [ ] simplify usage of this template, create predefined commands
+
+### Create new WP
+
+`cd wp-flash-api && npm i && npm run dev`
+```
+curl http://127.0.0.1:3000/wordpress -X POST -d '{"project":{"prefix":"kalacs","path":"","database":{"name":"kalacs","user":"kalacs","password":"kalacs","root_password":"test"},"webserver":{"port":9999}}}' -H 'Content-type: application/json'
+```
+
+### Fix url
+
+```
+docker run -it --rm \                                        
+    --volumes-from wordpress \
+    --network wordpress_app-network \
+    wordpress:cli search-replace 'webserver' '0.0.0.0' --skip-columns=guid
+```
+
