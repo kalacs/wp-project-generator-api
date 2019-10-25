@@ -42,14 +42,21 @@ services:
       - "{{project.webserver.port}}:80"
     volumes:
       - {{project.prefix}}-wordpress:/var/www/html
-      - ./services/web_server/nginx/nginx-conf:/etc/nginx/conf.d
+      - './services/webserver/nginx/nginx-conf:/etc/nginx/conf.d'
     networks:
       - {{project.prefix}}-app-network
 
 volumes:
   {{project.prefix}}-wordpress:
+     driver_opts:
+           type: none
+           device: '{{project.path}}/services/wordpress'
+           o: bind
   {{project.prefix}}-dbdata:
-
+     driver_opts:
+           type: none
+           device: '{{project.path}}/services/database/data'
+           o: bind
 networks:
   {{project.prefix}}-app-network:
     driver: bridge
