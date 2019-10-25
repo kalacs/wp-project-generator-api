@@ -7,37 +7,58 @@ const promisifiedRead = promisify(fs.readFile);
 const promisifiedWrite = promisify(fs.writeFile);
 const path = require('path');
 const compose = require('docker-compose');
+// create project template
+const getConfig = require('../../utils/config');
+const mkdirp = require('mkdirp');
+const promisifiedMkdirp = promisify(mkdirp);
+// copy and transform template
+const copy = require('recursive-copy');
+const through = require('through2');
+ 
+const copyOptions = {
+    dot: true,
+    filter: [
+        '**/*',
+        '!.htpasswd'
+    ],
+    rename: function(filePath) {
+        return filePath.replace('.tpl', '');
+    }
+};
 
 module.exports = async function (fastify, opts) {
   fastify.post('/', async function (request, reply) {
       request.log.info('BODY', request.body);
       // tempdata
-      const templateData = {
-        project: {
-          prefix: 'test',
-          database: {
-            name: 'test',
-            user: 'test',
-            password: 'test',
-            root_password: 'test',
-          },
-          webserver: {
-            port: 8888
-          }
-        }
-      };
-      // read template
-      const tmlPath = path.join(__dirname, '..','..','docker-template')
-      const tmpFile = 'docker-compose.tmp';
-      const fileContent = (await promisifiedRead(path.join(tmlPath, tmpFile))).toString()
-      const templatedContent = placeholder(fileContent, templateData);
-      request.log.info('File', templatedContent);
+      const templateData = request.body;
+      // create project template
+      const {
+        sitesPath,
+        templatePath
+      } = getConfig();
+      const projectPath = path.join(sitesPath, templateData.project.prefix);
+      templateData.project.path = projectPath;
 
-      // write compose file
-      await promisifiedWrite(path.join(__dirname, '..','..','temp','docker-compose.yml'), templatedContent);
+      try {
+        await promisifiedMkdirp(projectPath);
+      } catch (error) {
+        req.log.error(error);
+      }
+      // copy and transform template
+      copyOptions.transform = function(src, dest, stats) {
+        if (path.extname(src) !== '.tpl') { return null; }
+          return through(function(chunk, _, done)  {
+              const output = placeholder(chunk.toString(), templateData);
+              done(null, output);
+          });
+      }
+
+      const copiedFiles = await copy(templatePath, projectPath, copyOptions);
+      request.log.info('File', copiedFiles);
+
       //run compose file
-      const result = await compose.upAll({ cwd: path.join(__dirname, '..','..','temp'),  log: true});
-      return result;
+//      const result = await compose.upAll({ cwd: path.join(__dirname, '..','..','temp'),  log: true});
+      return copiedFiles;
     }
   )
 }
