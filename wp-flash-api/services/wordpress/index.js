@@ -3,10 +3,7 @@
 const placeholder = require('../../utils/placeholder');
 const fs = require('fs');
 const promisify = require('util').promisify;
-const promisifiedRead = promisify(fs.readFile);
-const promisifiedWrite = promisify(fs.writeFile);
 const path = require('path');
-const compose = require('docker-compose');
 // create project template
 const getConfig = require('../../utils/config');
 const mkdirp = require('mkdirp');
@@ -14,7 +11,8 @@ const promisifiedMkdirp = promisify(mkdirp);
 // copy and transform template
 const copy = require('recursive-copy');
 const through = require('through2');
- 
+const wpManager = require('../../utils/wp-manager')();
+const WP_MANAGER_HEADER = 'wp-manager-project-path';
 const copyOptions = {
     dot: true,
     filter: [
@@ -28,8 +26,6 @@ const copyOptions = {
 
 module.exports = async function (fastify, opts) {
   fastify.post('/', async function (request, reply) {
-      request.log.info('BODY', request.body);
-      // tempdata
       const templateData = request.body;
       // create project template
       const {
@@ -57,16 +53,72 @@ module.exports = async function (fastify, opts) {
       request.log.info('File', copiedFiles);
 
       //run compose file
-//      const result = await compose.upAll({ cwd: path.join(__dirname, '..','..','temp'),  log: true});
       return copiedFiles;
     }
-  )
+  ),
+
+  fastify.get('/services/:projectName', async req => wpManager.queryServices(getProjectFullPath(extractServicesParameters(req)))),
+
+  fastify.post('/:projectName/services', async req => wpManager.createServices(getProjectFullPath(extractServicesParameters(req)))),
+  fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req)))),
+
+  fastify.delete('/services/:projectName', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
 }
-module.exports.autoPrefix = '/wordpress'
-// If you prefer async/await, use the following
-//
-// module.exports = async function (fastify, opts) {
-//   fastify.get('/example', async function (request, reply) {
-//     return 'this is an example'
-//   })
-// }
+const extractServicesParameters = ({
+  params,
+  body,
+  headers
+}) => {
+  const { projectName } = params || { projectName: '' };
+  const { projectPrefix } = body || { projectPrefix: '' };
+  const { [WP_MANAGER_HEADER]: projectPath } = headers || { [WP_MANAGER_HEADER]: '' };
+  return {
+    projectPrefix: projectName || projectPrefix,
+    projectPath
+  }
+};
+
+const extractWPInstallParameters = req => {
+  const {
+    volume,
+    network,
+    url,
+    title,
+    adminName,
+    adminPassword,
+    adminEmail,
+  } = req.body;
+  
+  return {
+    projectFullPath: getProjectFullPath(extractServicesParameters(req)),
+    volume,
+    network,
+    url,
+    title,
+    adminName,
+    adminPassword,
+    adminEmail,
+  }
+};
+
+const getProjectFullPath = ({ projectPath, projectPrefix }) => path.join(projectPath, projectPrefix);
+const getInstallParameters = ({
+  projectFullPath,
+  volume,
+  network,
+  url,
+  title,
+  adminName,
+  adminPassword,
+  adminEmail,
+}) => ({
+  projectFullPath,
+  volume,
+  network,
+  url,
+  title,
+  adminName,
+  adminPassword,
+  adminEmail,
+});
+module.exports.autoPrefix = '/wordpress-project'
