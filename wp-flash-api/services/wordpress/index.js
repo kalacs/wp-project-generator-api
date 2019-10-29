@@ -57,22 +57,22 @@ module.exports = async function (fastify, opts) {
     }
   ),
 
-  fastify.get('/services/:projectName', async req => wpManager.queryServices(getProjectFullPath(extractServicesParameters(req)))),
+  fastify.get('/:projectName/services', async req => wpManager.queryServices(extractServicesParameters(req))),
 
   fastify.post('/:projectName/services', async req => wpManager.createServices(getProjectFullPath(extractServicesParameters(req)))),
   fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req)))),
 
-  fastify.delete('/services/:projectName', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
+  fastify.delete('/:projectName/services', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
 }
 const extractServicesParameters = ({
   params,
   body,
-  headers
 }) => {
   const { projectName } = params || { projectName: '' };
   const { projectPrefix } = body || { projectPrefix: '' };
-  const { [WP_MANAGER_HEADER]: projectPath } = headers || { [WP_MANAGER_HEADER]: '' };
+  const {  sitesPath: projectPath } = getConfig();
   return {
+    projectName,
     projectPrefix: projectName || projectPrefix,
     projectPath
   }
