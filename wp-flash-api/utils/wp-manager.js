@@ -20,7 +20,7 @@ module.exports = function() {
         }),
         installWP: ({
             projectFullPath,
-            volume,
+            container,
             network,
             url,
             title,
@@ -29,7 +29,7 @@ module.exports = function() {
             adminEmail,
         }) => {
 
-            return createDocker(projectFullPath).command(`run --rm --volumes-from ${volume} --network ${network} wordpress:cli core install --url='${url}' --title='${title}' --admin_name='${adminName}' --admin_password='${adminPassword}' --admin_email='${adminEmail}'`);
+            return createDocker(projectFullPath).command(`run --rm --volumes-from ${container} --network ${network} wordpress:cli core install --url='${url}' --title='${title}' --admin_name='${adminName}' --admin_password='${adminPassword}' --admin_email='${adminEmail}'`);
         }
     }
 }

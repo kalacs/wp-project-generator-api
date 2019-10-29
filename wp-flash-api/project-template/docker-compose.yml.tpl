@@ -10,11 +10,11 @@ services:
       - MYSQL_ROOT_PASSWORD={{project.database.root_password}}
       - MYSQL_USER={{project.database.user}}
       - MYSQL_PASSWORD={{project.database.password}}
-    volumes: 
-      - {{project.prefix}}-dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
-      - {{project.prefix}}-app-network
+      - {{project.prefix}}-network
+    labels:
+      - "com.wp-manager.project.name=test"
 
   {{project.prefix}}-wordpress:
     depends_on: 
@@ -30,7 +30,9 @@ services:
     volumes:
       - {{project.prefix}}-wordpress:/var/www/html
     networks:
-      - {{project.prefix}}-app-network
+      - {{project.prefix}}-network
+    labels:
+      - "com.wp-manager.project.name=test"
 
   {{project.prefix}}-webserver:
     depends_on:
@@ -44,7 +46,9 @@ services:
       - {{project.prefix}}-wordpress:/var/www/html
       - './services/webserver/nginx/nginx-conf:/etc/nginx/conf.d'
     networks:
-      - {{project.prefix}}-app-network
+      - {{project.prefix}}-network
+    labels:
+      - "com.wp-manager.project.name=test"
 
 volumes:
   {{project.prefix}}-wordpress:
@@ -52,11 +56,6 @@ volumes:
            type: none
            device: '{{project.path}}/services/wordpress'
            o: bind
-  {{project.prefix}}-dbdata:
-     driver_opts:
-           type: none
-           device: '{{project.path}}/services/database/data'
-           o: bind
 networks:
-  {{project.prefix}}-app-network:
+  {{project.prefix}}-network:
     driver: bridge

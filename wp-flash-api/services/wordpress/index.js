@@ -58,11 +58,10 @@ module.exports = async function (fastify, opts) {
   ),
 
   fastify.get('/:projectName/services', async req => wpManager.queryServices(extractServicesParameters(req))),
-
   fastify.post('/:projectName/services', async req => wpManager.createServices(getProjectFullPath(extractServicesParameters(req)))),
-  fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req)))),
-
   fastify.delete('/:projectName/services', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
+
+  fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req))))
 }
 const extractServicesParameters = ({
   params,
@@ -80,7 +79,7 @@ const extractServicesParameters = ({
 
 const extractWPInstallParameters = req => {
   const {
-    volume,
+    container,
     network,
     url,
     title,
@@ -91,7 +90,7 @@ const extractWPInstallParameters = req => {
   
   return {
     projectFullPath: getProjectFullPath(extractServicesParameters(req)),
-    volume,
+    container,
     network,
     url,
     title,
@@ -104,7 +103,7 @@ const extractWPInstallParameters = req => {
 const getProjectFullPath = ({ projectPath, projectPrefix }) => path.join(projectPath, projectPrefix);
 const getInstallParameters = ({
   projectFullPath,
-  volume,
+  container,
   network,
   url,
   title,
@@ -113,7 +112,7 @@ const getInstallParameters = ({
   adminEmail,
 }) => ({
   projectFullPath,
-  volume,
+  container,
   network,
   url,
   title,
