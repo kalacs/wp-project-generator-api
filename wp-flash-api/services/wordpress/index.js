@@ -58,7 +58,22 @@ module.exports = async function (fastify, opts) {
   ),
 
   fastify.get('/:projectName/services', async req => wpManager.queryServices(extractServicesParameters(req))),
-  fastify.post('/:projectName/services', async req => wpManager.createServices(getProjectFullPath(extractServicesParameters(req)))),
+  fastify.post('/:projectName/services', async req => {
+    const extractedParameters = extractServicesParameters(req);
+    const command = getCommand(extractedParameters);
+    const projectFullPath = getProjectFullPath(extractedParameters);
+
+    switch(command) {
+      case 'up': 
+        return wpManager.createServices(projectFullPath);
+      case 'stop':
+        return wpManager.stopServices(projectFullPath);
+      case 'restart':
+        return wpManager.restartServices(projectFullPath);
+      default: 
+        return {};
+    }
+  }),
   fastify.delete('/:projectName/services', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
 
   fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req))))
@@ -69,11 +84,13 @@ const extractServicesParameters = ({
 }) => {
   const { projectName } = params || { projectName: '' };
   const { projectPrefix } = body || { projectPrefix: '' };
+  const { command } = body || { command: '' };
   const {  sitesPath: projectPath } = getConfig();
   return {
     projectName,
     projectPrefix: projectName || projectPrefix,
-    projectPath
+    projectPath,
+    command
   }
 };
 
@@ -120,4 +137,5 @@ const getInstallParameters = ({
   adminPassword,
   adminEmail,
 });
+const getCommand = ({ command }) => command;
 module.exports.autoPrefix = '/wordpress-project'

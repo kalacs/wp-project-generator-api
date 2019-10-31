@@ -14,7 +14,8 @@ services:
     networks:
       - {{project.prefix}}-network
     labels:
-      - "com.wp-manager.project.name=test"
+      - "com.wp-manager.project.name={{project.prefix}}"
+      - "com.wp-manager.service.db=true"
 
   {{project.prefix}}-wordpress:
     depends_on: 
@@ -32,7 +33,8 @@ services:
     networks:
       - {{project.prefix}}-network
     labels:
-      - "com.wp-manager.project.name=test"
+      - "com.wp-manager.project.name={{project.prefix}}"
+      - "com.wp-manager.service.wordpress=true"
 
   {{project.prefix}}-webserver:
     depends_on:
@@ -48,7 +50,8 @@ services:
     networks:
       - {{project.prefix}}-network
     labels:
-      - "com.wp-manager.project.name=test"
+      - "com.wp-manager.project.name={{project.prefix}}"
+      - "com.wp-manager.service.webserver=true"
 
 volumes:
   {{project.prefix}}-wordpress:
@@ -56,6 +59,10 @@ volumes:
            type: none
            device: '{{project.path}}/services/wordpress'
            o: bind
+    labels:
+      - "com.wp-manager.project.name={{project.prefix}}"
+      - "com.wp-manager.sercvice.wordpress=true"
+
 networks:
   {{project.prefix}}-network:
     driver: bridge

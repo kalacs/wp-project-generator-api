@@ -10,6 +10,8 @@ const createDocker = cwd => new Docker(new Options(null, cwd));
 module.exports = function() {
     return {
         createServices: projectFullPath => compose.upAll({ cwd: projectFullPath }),
+        stopServices: projectFullPath => compose.stop({ cwd: projectFullPath }),
+        restartServices: projectFullPath => compose.restartAll({ cwd: projectFullPath }),
         queryServices: async ({ projectName }) => {
             const { containerList } = await createDocker(sitesPath).command(`ps -a --filter "label=com.wp-manager.project.name=${projectName}"`);
             return containerList || [];
