@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
   {{project.prefix}}-db:
@@ -55,6 +55,7 @@ services:
 
 volumes:
   {{project.prefix}}-wordpress:
+    name: {{project.prefix}}-wordpress
     driver_opts:
       type: none
       device: '{{project.path}}/services/wordpress'
@@ -65,4 +66,5 @@ volumes:
 
 networks:
   {{project.prefix}}-network:
+    name: {{project.prefix}}-wp-network
     driver: bridge
