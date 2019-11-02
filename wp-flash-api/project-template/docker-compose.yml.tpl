@@ -55,10 +55,10 @@ services:
 
 volumes:
   {{project.prefix}}-wordpress:
-     driver_opts:
-           type: none
-           device: '{{project.path}}/services/wordpress'
-           o: bind
+    driver_opts:
+      type: none
+      device: '{{project.path}}/services/wordpress'
+      o: bind
     labels:
       - "com.wp-manager.project.name={{project.prefix}}"
       - "com.wp-manager.sercvice.wordpress=true"
