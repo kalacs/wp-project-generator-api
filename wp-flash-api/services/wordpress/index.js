@@ -12,7 +12,7 @@ const promisifiedMkdirp = promisify(mkdirp);
 const copy = require('recursive-copy');
 const through = require('through2');
 const wpManager = require('../../utils/wp-manager')();
-const WP_MANAGER_HEADER = 'wp-manager-project-path';
+const R = require('ramda');
 const copyOptions = {
     dot: true,
     filter: [
@@ -77,7 +77,14 @@ module.exports = async function (fastify, opts) {
   fastify.delete('/:projectName/services', async req => wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))))
 
   fastify.post('/:projectName/services/wordpress', async req => wpManager.installWP(getInstallParameters(extractWPInstallParameters(req))))
+
+  fastify.post('/:projectName/services/wordpress/plugins', async req => wpManager.installPlugin(extractPluginInstallParameters(req))),
+  fastify.post('/:projectName/services/wordpress/theme', async req => wpManager.installTheme(extractThemeInstallParameters(req))),
+
+  fastify.get('/packages', async () => {const pack = await wpManager.listPackages(); console.log(pack); return pack;}),
+  fastify.get('/packages/:name', async req => wpManager.listPackageContent(getName(extractPackageParameters(req))))
 }
+const getName = obj => R.pick(['name'], obj);
 const extractServicesParameters = ({
   params,
   body,
@@ -93,6 +100,11 @@ const extractServicesParameters = ({
     command
   }
 };
+
+const extractPackageParameters = ({
+  params,
+  body
+}) => ({ name: params.name || '' })
 
 const extractWPInstallParameters = req => {
   const {
@@ -116,26 +128,44 @@ const extractWPInstallParameters = req => {
     adminEmail,
   }
 };
+const extractPluginInstallParameters = req => {
+  const {
+    container,
+    network,
+    plugins,
+  } = req.body;
+  return {
+    projectFullPath: getProjectFullPath(extractServicesParameters(req)),
+    container,
+    network,
+    plugins: plugins.map(plugin => path.join(getPackagePath(getConfig()), plugin))
+  }
+};
+const extractThemeInstallParameters = req => {
+  const {
+    container,
+    network,
+    theme = '',
+  } = req.body;
+  return {
+    projectFullPath: getProjectFullPath(extractServicesParameters(req)),
+    container,
+    network,
+    theme: path.join(getPackagePath(getConfig()), theme)
+  }
+};
 
 const getProjectFullPath = ({ projectPath, projectPrefix }) => path.join(projectPath, projectPrefix);
-const getInstallParameters = ({
-  projectFullPath,
-  container,
-  network,
-  url,
-  title,
-  adminName,
-  adminPassword,
-  adminEmail,
-}) => ({
-  projectFullPath,
-  container,
-  network,
-  url,
-  title,
-  adminName,
-  adminPassword,
-  adminEmail,
-});
+const getPackagePath = ({ packagesPathInContainer }) => packagesPathInContainer;
+const getInstallParameters = obj => R.pick([
+  'projectFullPath',
+  'container',
+  'network',
+  'url',
+  'title',
+  'adminName',
+  'adminPassword',
+  'adminEmail',
+], obj);
 const getCommand = ({ command }) => command;
 module.exports.autoPrefix = '/wordpress-project'
