@@ -16,7 +16,8 @@ services:
     labels:
       - "com.wp-manager.project.name={{project.prefix}}"
       - "com.wp-manager.service.db=true"
-
+      - traefik.enable=false
+  
   {{project.prefix}}-wordpress:
     depends_on: 
       - {{project.prefix}}-db
@@ -35,6 +36,7 @@ services:
     labels:
       - "com.wp-manager.project.name={{project.prefix}}"
       - "com.wp-manager.service.wordpress=true"
+      - traefik.enable=false
 
   {{project.prefix}}-webserver:
     depends_on:
@@ -43,15 +45,20 @@ services:
     restart: unless-stopped
     container_name: {{project.prefix}}-webserver
     ports:
-      - "{{project.webserver.port}}:80"
+      - "80"
     volumes:
       - {{project.prefix}}-wordpress:/var/www/html
       - './services/webserver/nginx/nginx-conf:/etc/nginx/conf.d'
     networks:
       - {{project.prefix}}-network
+      - proxy-web
     labels:
       - "com.wp-manager.project.name={{project.prefix}}"
       - "com.wp-manager.service.webserver=true"
+      - traefik.backend={{project.prefix}}
+      - traefik.frontend.rule=Host:{{project.prefix}}.localhost
+      - traefik.docker.network=proxy-web
+      - traefik.port=80
 
 volumes:
   {{project.prefix}}-wordpress:
@@ -68,3 +75,5 @@ networks:
   {{project.prefix}}-network:
     name: {{project.prefix}}-wp-network
     driver: bridge
+  proxy-web:
+    external: true
