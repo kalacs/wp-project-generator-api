@@ -1,0 +1,18 @@
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.dashboard]
+    address = ":8080"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+        users = ["admin:$apr1$7IEL7naX$vZ4gmKHNJgVvCQQCYqtF71"]
+  [entryPoints.http]
+    address = ":80"
+
+[api]
+entrypoint="dashboard"
+
+[docker]
+domain = "localhost"
+watch = true
+network = "proxy-web"
