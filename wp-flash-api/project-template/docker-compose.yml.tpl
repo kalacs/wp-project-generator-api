@@ -7,7 +7,7 @@ services:
     container_name: {{project.prefix}}-db
     environment:
       - MYSQL_DATABASE={{project.database.name}}
-      - MYSQL_ROOT_PASSWORD={{project.database.root_password}}
+      - MYSQL_ROOT_PASSWORD={{project.database.rootPassword}}
       - MYSQL_USER={{project.database.user}}
       - MYSQL_PASSWORD={{project.database.password}}
     command: '--default-authentication-plugin=mysql_native_password'
