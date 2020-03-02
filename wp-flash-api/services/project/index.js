@@ -7,7 +7,7 @@ const getConfig = require('../../utils/config');
 // API Impl
 
 module.exports = async function(fastify, opts) {
-  fastify.get('/', async () => {
+  fastify.get('/', async (request, reply) => {
     const { sitesPath } = getConfig();
 
     const matches = await globby(['*', '/*', '*/*'], {
@@ -28,7 +28,11 @@ module.exports = async function(fastify, opts) {
       return acc;
     }, initial);
 
-    return Object.values(projects);
+    const projectList = Object.values(projects);
+
+    reply.code(200);
+    reply.header('Content-Range', `1-${projectList.length}/${projectList.length}`);
+    reply.send(projectList);
   });
 };
 

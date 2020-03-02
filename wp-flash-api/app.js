@@ -4,8 +4,9 @@ const path = require('path');
 const AutoLoad = require('fastify-autoload');
 const cors = require('cors');
 
-var whitelist = ['app://postman', 'http://localhost:4128'];
-var corsOptions = {
+const whitelist = ['app://postman', 'http://localhost:4128'];
+const customHeaders = ['Authorization', 'Content-Range', 'Content-Type'];
+const corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
@@ -13,6 +14,8 @@ var corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  allowedHeaders: customHeaders,
+  exposedHeaders: customHeaders,
 };
 
 module.exports = function(fastify, opts, next) {
