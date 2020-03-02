@@ -1,5 +1,17 @@
 # Wordpress project configurator
 
+## Before use
+
+Create the following folder structure inside `/home/${username}`.
+
+```
+Downloads
+    wp-packages
+        ${projectName}
+            plugins
+            themes
+```
+
 ## Features:
 
 - [x] install basic WP from zero
