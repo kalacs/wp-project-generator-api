@@ -25,6 +25,10 @@ const copyOptions = {
 // API Impl
 
 module.exports = async function(fastify, opts) {
+  fastify.options('*', (request, reply) => {
+    reply.send();
+  });
+
   fastify.post('/', async function(request, reply) {
     const templateData = request.body;
     // create project template
