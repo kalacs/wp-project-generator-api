@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "docker-cli-js": "^2.6.0",
     "docker-compose": "^0.22.2",
     "dockerode": "^3.0.2",
