@@ -95,4 +95,30 @@ Or get statuses with frontend:
 
 ![Get service statuses](./documentation/images/16.png "Get service statuses")
 
+Wordpress has been created:
+
+![Install Wordpress](./documentation/images/4.png "Install Wordpress")
+
+### 3. Install Wordpress
+
+The next step in terminal application will install the instance without any clicks on the web browser.
+
+![Install has finished](./documentation/images/5.png "Install has finished")
+
+Wordpress has installed:
+
+![Site screen](./documentation/images/6.png "Site screen")
+
+Admin page (with default plugins and themes):
+
+![Admin page](./documentation/images/7.png "Admin page")
+
+### 4. Install plugins and themes
+
+Final step is installing desired plugins and themes. It is possible to organize plugins and themes to packages e.g. E-commerce, Blog1, Blog1 ... etc. You can choose from this during kickstarting the Wordpress project.
+
+Choose from pre-defined packages:
+
+![Packages](./documentation/images/8.png "Packages")
+
 
