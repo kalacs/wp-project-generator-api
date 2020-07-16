@@ -40,8 +40,12 @@ This section required some technical backround. The project has two main parts:
 ### Backend
 
 It responsible for wordpress project creation, docker service orchestration and provide nice API for managing all of this.
+
 Used technologies:
-* Docker ()
+
+* Docker (<https://www.docker.com/>) for handle containers
+* Fastify provides the API (<https://www.fastify.io/>)
+* Treafik creates dynamic routing () e.g. `test.hostname` or `shoes.hostname`. that is mean no need for web server like apache
 
 
 
