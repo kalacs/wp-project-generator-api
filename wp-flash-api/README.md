@@ -76,3 +76,8 @@ It will be shown how project kickstart works.
 Run this command: `wp-manager-cli project kickstart`:
 
 ![Docker service parameters](./documentation/images/1.png "Docker service parameters")
+
+Now, project folders has been generated (on machine what runs backend)
+
+![Wordpress project folders](./documentation/images/15.png "Wordpress project folders")
+
