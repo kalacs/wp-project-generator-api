@@ -17,19 +17,19 @@ const R = require('ramda');
 const copyOptions = {
   dot: true,
   filter: ['**/*', '!.htpasswd'],
-  rename: function(filePath) {
+  rename: function (filePath) {
     return filePath.replace('.tpl', '');
   },
 };
 
 // API Impl
 
-module.exports = async function(fastify, opts) {
+module.exports = async function (fastify, opts) {
   fastify.options('*', (request, reply) => {
     reply.send();
   });
 
-  fastify.post('/', async function(request, reply) {
+  fastify.post('/', async function (request, reply) {
     const templateData = request.body;
     // create project template
     const { sitesPath, templatePath } = getConfig();
@@ -39,14 +39,14 @@ module.exports = async function(fastify, opts) {
     try {
       await promisifiedMkdirp(projectPath);
     } catch (error) {
-      req.log.error(error);
+      request.log.error(error);
     }
     // copy and transform template
-    copyOptions.transform = function(src, dest, stats) {
+    copyOptions.transform = function (src, dest, stats) {
       if (path.extname(src) !== '.tpl') {
         return null;
       }
-      return through(function(chunk, _, done) {
+      return through(function (chunk, _, done) {
         const output = placeholder(chunk.toString(), templateData);
         done(null, output);
       });
@@ -59,11 +59,11 @@ module.exports = async function(fastify, opts) {
     return copiedFiles;
   });
 
-  fastify.get('/:projectName/services', async req =>
+  fastify.get('/:projectName/services', async (req) =>
     wpManager.queryServices(extractServicesParameters(req)),
   );
 
-  fastify.post('/:projectName/services', async req => {
+  fastify.post('/:projectName/services', async (req) => {
     const extractedParameters = extractServicesParameters(req);
     const command = getCommand(extractedParameters);
     const projectFullPath = getProjectFullPath(extractedParameters);
@@ -80,19 +80,19 @@ module.exports = async function(fastify, opts) {
     }
   });
 
-  fastify.delete('/:projectName/services', async req =>
+  fastify.delete('/:projectName/services', async (req) =>
     wpManager.destroyServices(getProjectFullPath(extractServicesParameters(req))),
   );
 
-  fastify.post('/:projectName/services/wordpress', async req =>
+  fastify.post('/:projectName/services/wordpress', async (req) =>
     wpManager.installWP(getInstallParameters(extractWPInstallParameters(req))),
   );
 
-  fastify.post('/:projectName/services/wordpress/plugins', async req =>
+  fastify.post('/:projectName/services/wordpress/plugins', async (req) =>
     wpManager.installPlugin(extractPluginInstallParameters(req)),
   );
 
-  fastify.post('/:projectName/services/wordpress/theme', async req =>
+  fastify.post('/:projectName/services/wordpress/theme', async (req) =>
     wpManager.installTheme(extractThemeInstallParameters(req)),
   );
 
@@ -102,14 +102,14 @@ module.exports = async function(fastify, opts) {
     return pack;
   });
 
-  fastify.get('/packages/:name', async req =>
+  fastify.get('/packages/:name', async (req) =>
     wpManager.listPackageContent(getName(extractPackageParameters(req))),
   );
 };
 
 // Utility fns
 
-const getName = obj => R.pick(['name'], obj);
+const getName = (obj) => R.pick(['name'], obj);
 
 const extractServicesParameters = ({ params, body }) => {
   const { projectName } = params || { projectName: '' };
@@ -128,7 +128,7 @@ const extractPackageParameters = ({ params, body }) => ({
   name: params.name || '',
 });
 
-const extractWPInstallParameters = req => {
+const extractWPInstallParameters = (req) => {
   const { container, network, url, title, adminName, adminPassword, adminEmail } = req.body;
 
   return {
@@ -143,17 +143,17 @@ const extractWPInstallParameters = req => {
   };
 };
 
-const extractPluginInstallParameters = req => {
+const extractPluginInstallParameters = (req) => {
   const { container, network, plugins } = req.body;
   return {
     projectFullPath: getProjectFullPath(extractServicesParameters(req)),
     container,
     network,
-    plugins: plugins.map(plugin => path.join(getPackagePath(getConfig()), plugin)),
+    plugins: plugins.map((plugin) => path.join(getPackagePath(getConfig()), plugin)),
   };
 };
 
-const extractThemeInstallParameters = req => {
+const extractThemeInstallParameters = (req) => {
   const { container, network, theme = '' } = req.body;
   return {
     projectFullPath: getProjectFullPath(extractServicesParameters(req)),
@@ -168,7 +168,7 @@ const getProjectFullPath = ({ projectPath, projectPrefix }) =>
 
 const getPackagePath = ({ packagesPathInContainer }) => packagesPathInContainer;
 
-const getInstallParameters = obj =>
+const getInstallParameters = (obj) =>
   R.pick(
     [
       'projectFullPath',
