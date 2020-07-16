@@ -81,3 +81,18 @@ Now, project folders has been generated (on machine what runs backend)
 
 ![Wordpress project folders](./documentation/images/15.png "Wordpress project folders")
 
+### 2. Create docker services
+
+This step will be done automatically.
+
+![Docker services up and running](./documentation/images/2.png "Docker services up and running")
+
+Docker services up and running:
+
+![Docker services up and running](./documentation/images/3.png "Docker services up and running")
+
+Or get statuses with frontend: 
+
+![Get service statuses](./documentation/images/15.png "Get service statuses")
+
+
