@@ -93,6 +93,6 @@ Docker services up and running:
 
 Or get statuses with frontend: 
 
-![Get service statuses](./documentation/images/15.png "Get service statuses")
+![Get service statuses](./documentation/images/16.png "Get service statuses")
 
 
