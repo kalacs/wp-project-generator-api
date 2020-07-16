@@ -39,14 +39,35 @@ This section required some technical backround. The project has two main parts:
 
 ### Backend
 
-It responsible for wordpress project creation, docker service orchestration and provide nice API for managing all of this.
+It responsible for wordpress project creation, docker service orchestration and provide nice API for managing all of this. It can be installed any linux server which has docker and nodejs.
+
+Requirements:
+
+* nodejs 11
+* docker engine
+* docker-compose
 
 Used technologies:
 
 * Docker (<https://www.docker.com/>) for handle containers
+* NodeJS (<https://nodejs.org/en/>)
 * Fastify provides the API (<https://www.fastify.io/>)
 * Treafik creates dynamic routing () e.g. `test.hostname` or `shoes.hostname`. that is mean no need for web server like apache
 
+### Frontend
 
+Frontend communicates backend via rest API. There is one frontend for now which is an terminal application and written in React. Supports MacOS and linux.
 
+Reguirements:
+
+* nodejs 11
+
+Used technologies:
+
+* React (<https://reactjs.org/>)
+* Ink (<https://github.com/vadimdemedes/ink#readme>)
+
+## Create a Wordpress instance step by step
+
+It will be shown how project kickstart works. 
 
