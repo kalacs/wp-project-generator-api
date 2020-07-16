@@ -71,3 +71,8 @@ Used technologies:
 
 It will be shown how project kickstart works. 
 
+### 1. Create project structure
+
+Run this command: `wp-manager-cli project kickstart`:
+
+![Docker service parameters](./documentation/images/1.png "Docker service parameters")
