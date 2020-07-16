@@ -11,4 +11,38 @@ Create a new wordpress is a time consuming and boring process. It has to be a be
 ## How?
 
 Use various technologies in order to achieve mentioned above. Run wordpresses in Docker (https://www.docker.com/) environment is more secure then just put into some apache server. Further, containerization technology makes deployment more easier too.
-Rest API is simplifying to manage wordpresses and hide all the technical details from developer. In addition, it makes able to attach any front-end application to it. At the time of writing there is only one front-end which is a terminal application.  
+Rest API is simplifying to manage wordpresses and hide all the technical details from developer. In addition, it makes able to attach any front-end application to it. At the time of writing there is only one front-end which is a terminal application.
+
+## Features
+
+These have been done:
+
+* Fully installed wordpress with themes and plugins less than one minute
+* More secure environment because of containerization technology
+* Flexible API, you can attach any frontend
+
+There is a lots of room for improvement:
+
+* Managing plugins and themes on running wordpress instance
+* Web or desktop GIU
+* Implement deployment process through FTP or even AWS
+* Real-time metrics from instances
+* Backup and restore
+* ... and more
+
+## Technical details
+
+This section required some technical backround. The project has two main parts:
+
+* Backend
+* Frontend
+
+### Backend
+
+It responsible for wordpress project creation, docker service orchestration and provide nice API for managing all of this.
+Used technologies:
+* Docker ()
+
+
+
+
