@@ -52,7 +52,7 @@ Used technologies:
 * Docker (<https://www.docker.com/>) for handle containers
 * NodeJS (<https://nodejs.org/en/>)
 * Fastify provides the API (<https://www.fastify.io/>)
-* Treafik creates dynamic routing () e.g. `test.hostname` or `shoes.hostname`. that is mean no need for web server like apache
+* Traefik creates dynamic routing (<https://containo.us/traefik/>) e.g. `test.hostname` or `shoes.hostname`. that is mean no need for web server like apache
 
 ### Frontend
 
