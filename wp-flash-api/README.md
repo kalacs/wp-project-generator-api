@@ -121,4 +121,24 @@ Choose from pre-defined packages:
 
 ![Packages](./documentation/images/8.png "Packages")
 
+You can select multiple plugins from previously choosed package to install:
+
+![Plugins](./documentation/images/9.png "Plugins")
+
+You can select one theme to be applied:
+
+![Theme](./documentation/images/10.png "Theme")
+
+Whole installation process has been done:
+
+![Finish](./documentation/images/12.png "Finish")
+
+Resulted Wordpress site with the selected theme:
+
+![WP frontend](./documentation/images/13.png "WP frontend")
+
+Admin page with installed plugins:
+
+![WP admin](./documentation/images/14.png "WP admin")
+
 
