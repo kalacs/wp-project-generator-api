@@ -1,5 +1,5 @@
 .env
 docker/dbdata
 node_modules
-package.json
+package-lock.json
 
